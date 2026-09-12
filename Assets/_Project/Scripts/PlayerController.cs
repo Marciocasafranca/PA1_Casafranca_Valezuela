@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public float speed = 7f;
-    public float jumpForce = 5f;
+    public float jumpForce = 10f;
 
     private Rigidbody2D rb;
     private bool isGrounded;
@@ -35,7 +35,8 @@ public class PlayerController : MonoBehaviour
     {
         if (
             collision.gameObject.CompareTag("Ground") ||
-            collision.gameObject.CompareTag("Platform")
+            collision.gameObject.CompareTag("Platform") ||
+            collision.gameObject.name == "PushableBox"
         )
         {
             isGrounded = true;
@@ -46,7 +47,8 @@ public class PlayerController : MonoBehaviour
     {
         if (
             collision.gameObject.CompareTag("Ground") ||
-            collision.gameObject.CompareTag("Platform")
+            collision.gameObject.CompareTag("Platform") ||
+            collision.gameObject.name == "PushableBox"
         )
         {
             isGrounded = false;
