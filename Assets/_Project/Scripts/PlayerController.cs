@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public float speed = 7f;
-    public float jumpForce = 10f;
+    public float jumpForce = 5f;
 
     private Rigidbody2D rb;
     private bool isGrounded;
@@ -31,9 +31,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnCollisionStay2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (
+            collision.gameObject.CompareTag("Ground") ||
+            collision.gameObject.CompareTag("Platform")
+        )
         {
             isGrounded = true;
         }
@@ -41,7 +44,10 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (
+            collision.gameObject.CompareTag("Ground") ||
+            collision.gameObject.CompareTag("Platform")
+        )
         {
             isGrounded = false;
         }
