@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private Animator animator;
     private AudioSource audioSource;
+    private SpriteRenderer spriteRenderer;
     private bool isGrounded;
 
     void Start()
@@ -17,6 +18,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
 
         if (audioSource == null)
         {
@@ -40,6 +42,12 @@ public class PlayerController : MonoBehaviour
             move * speed,
             rb.linearVelocity.y
         );
+
+        // Girar visualmente el personaje
+        if (move != 0 && spriteRenderer != null)
+        {
+            spriteRenderer.flipX = move < 0;
+        }
 
         animator.SetBool("IsRunning", move != 0);
         animator.SetBool("IsGrounded", isGrounded);
