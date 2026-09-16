@@ -9,12 +9,22 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D rb;
     private Animator animator;
+    private AudioSource audioSource;
     private bool isGrounded;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
+
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0f;
 
         if (jumpDust != null)
         {
@@ -47,7 +57,38 @@ public class PlayerController : MonoBehaviour
             {
                 jumpDust.Play();
             }
+
+            PlayJumpSound();
         }
+    }
+
+    private void PlayJumpSound()
+    {
+        int sampleRate = 44100;
+        float duration = 0.20f;
+        int samples = Mathf.CeilToInt(sampleRate * duration);
+
+        AudioClip clip = AudioClip.Create(
+            "JumpSFX",
+            samples,
+            1,
+            sampleRate,
+            false
+        );
+
+        float[] data = new float[samples];
+
+        for (int i = 0; i < samples; i++)
+        {
+            float t = i / (float)sampleRate;
+            float frequency = Mathf.Lerp(300f, 750f, t / duration);
+            float volume = 0.25f * (1f - t / duration);
+
+            data[i] = Mathf.Sin(2f * Mathf.PI * frequency * t) * volume;
+        }
+
+        clip.SetData(data, 0);
+        audioSource.PlayOneShot(clip);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
